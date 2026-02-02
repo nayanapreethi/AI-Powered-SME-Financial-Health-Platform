@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: sme_pulse_db
+    environment:
+      POSTGRES_USER: sme_pulse_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password_123}
+      POSTGRES_DB: sme_pulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sme_pulse_user -d sme_pulse_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sme_pulse_backend
+    environment:
+      - DATABASE_URL=postgresql://sme_pulse_user:${DB_PASSWORD:-secure_password_123}@postgres:5432/sme_pulse_db
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-your-32-byte-encryption-key}
+      - ENVIRONMENT=development
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend_uploads:/app/uploads
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sme_pulse_frontend
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # Redis for Caching (optional, for production)
+  redis:
+    image: redis:7-alpine
+    container_name: sme_pulse_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_uploads:
+
+networks:
+  default:
+    name: sme_pulse_network
+
