@@ -8,14 +8,15 @@ const Analysis = () => {
     { label: 'Debt to Equity', value: '0.45', benchmark: '<0.6', status: 'good', icon: TrendingDown },
   ]
   
-  const cashFlowData = [
-    { month: 'Aug', inflow: 45, outflow: 38 },
-    { month: 'Sep', inflow: 52, outflow: 42 },
-    { month: 'Oct', inflow: 48, outflow: 45 },
-    { month: 'Nov', inflow: 55, outflow: 44 },
-    { month: 'Dec', inflow: 62, outflow: 50 },
-    { month: 'Jan', inflow: 58, outflow: 48 },
-  ]
+  // Cash flow data for future chart implementation
+  // const cashFlowData = [
+  //   { month: 'Aug', inflow: 45, outflow: 38 },
+  //   { month: 'Sep', inflow: 52, outflow: 42 },
+  //   { month: 'Oct', inflow: 48, outflow: 45 },
+  //   { month: 'Nov', inflow: 55, outflow: 44 },
+  //   { month: 'Dec', inflow: 62, outflow: 50 },
+  //   { month: 'Jan', inflow: 58, outflow: 48 },
+  // ]
   
   return (
     <div className="space-y-6 animate-in">
