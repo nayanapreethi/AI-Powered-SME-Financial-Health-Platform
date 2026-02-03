@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Upload, FileText, X, CheckCircle, Clock, AlertCircle, File } from 'lucide-react'
+import { Upload, FileText, X, CheckCircle, Clock, AlertCircle, File as FileIcon } from 'lucide-react'
 
 const Documents = () => {
   const [dragActive, setDragActive] = useState(false)
@@ -63,7 +63,7 @@ const Documents = () => {
       case 'failed':
         return <AlertCircle className="w-5 h-5 text-danger-500" />
       default:
-        return <File className="w-5 h-5 text-gray-400" />
+        return <FileIcon className="w-5 h-5 text-gray-400" />
     }
   }
   
